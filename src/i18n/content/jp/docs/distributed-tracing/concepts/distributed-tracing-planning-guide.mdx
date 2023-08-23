@@ -1,88 +1,106 @@
 ---
-title: 'Distributed tracing: Planning guide'
+title: ディストリビューティッド（分散）トレーシング：プランニングガイド
 tags:
   - Understand dependencies
   - Distributed tracing
   - Get started
-metaDescription: Enabling New Relic distributed tracing impacts some New Relic APM features.
+metaDescription: Enabling New Relic distributed tracing impacts some APM features.
+translationType: machine
 ---
 
-If you are new to New Relic distributed tracing, we recommend you read the following before you enable distributed tracing.
+import distributedtracingTransactionTraceUI from 'images/distributed-tracing_screenshot-full_transaction-trace-UI.webp'
 
-## Impact to APM features [#changes]
+import distributedtracingTraceNameChangeUI from 'images/distributed-tracing_screenshot-crop_trace-name-change-UI.webp'
 
-Our distributed tracing improves on APM's previous [cross application tracing feature](/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces). Here are some key benefits:
+import distributedtracingDistributedTracingRollout from 'images/distributed-tracing_diagram_distributed-tracing-rollout.webp'
 
-* See more cross-service activity details and more complete end-to-end traces.
-* Filter and query traces, as well as make custom charts.
-* See the complete trace even when calls cross an organization's account boundaries.
-* See [Introduction to distributed tracing](/docs/intro-distributed-tracing) for more features.
+多くの製品では分散トレースがデフォルトで有効になっていますが、これを大規模な分散システムに展開する予定がある場合は、以下の[計画](#rollout)手順を確認することをお勧めします。
 
-[Enabling distributed tracing](/docs/understand-dependencies/distributed-tracing/get-started/introduction-distributed-tracing#enable) may affect some APM features you currently use. These changes affect only applications monitored by agents that have distributed tracing enabled—they don't apply on an account-level.
+また、古いバージョンの <InlinePopover type="apm"/>エージェントであり、分散トレーシングを使用していない場合は、分散トレーシングをロールアウトする前に、 [APM 機能への影響](#changes) を確認することをお勧めします。
 
-We may provide backward compatibility with some or all of the affected features in future releases. For now, you should understand the following changes before enabling distributed tracing:
+## 段階的な展開の計画 [#rollout]
+
+大規模な分散システムで分散トレースを有効にする場合は、次のヒントを参考にしてください。
+
+* 現在 APM を使用している場合は、「 [APM 機能への影響](#changes)」を参照してください。
+
+* ビジネスにとって最も重要なリクエスト、または分析とトラブルシューティングが必要となる可能性の高いリクエストについて検討し、こうしたサービスについて[ディストリビューティッド（分散）トレーシングを有効](#enable)にしましょう。サービスのトレーシングをほぼ同時に有効にすれば、エンドツーエンドのトレースの完全性をより簡単に評価することができます。
+
+* [ディストリビューティッド（分散）トレーシングのUI](/docs/apm/distributed-tracing/ui-data/understand-use-distributed-tracing-data)ですべてのトレースを見ると、他のサービスへの外部呼び出しについて、トレースでのスパンが表示されます。その後、希望するサービスについて、[ディストリビューティッド（分散）トレーシングを有効](#enable)にできます。サービスがほぼスタンドアロンで、他のサービスと連携して頻繁に使用されない場合、ディストリビューティッド（分散）トレーシングを有効にする必要はありません。
+
+  こうした段階的な展開を図示すると次のようになります：
+
+  <img
+    title="Diagram showing a roll-out strategy for distributed tracing."
+    alt="Diagram showing a roll-out strategy for distributed tracing."
+    src={distributedtracingDistributedTracingRollout}
+  />
+
+* 使用している場合 <InlinePopover type="apm"/>大規模なモノリシック サービスの場合、トレースごとに多くのサブプロセス スパンが存在する可能性があり、 [APM 制限により](/docs/distributed-tracing/ui-data/understand-use-distributed-tracing-ui/#rules-limits) 、予想よりも少ないトレースが発生する可能性があります。これは、APM エージェント インストルメンテーションを使用して重要でないデータのレポートを無効にすることで解決できます。
+
+* 分散トレースは、リクエスト パス内のサービスからサービスへと[ヘッダー情報を伝達すること](/docs/distributed-tracing/concepts/how-new-relic-distributed-tracing-works/#headers)によって機能します。一部のサービスは、ヘッダーを自動的に伝播しないプロキシまたはその他の仲介サービスを介して通信する場合があります。その場合、 `newrelic`ヘッダー値がソースから宛先に伝搬されるようにプロキシを構成する必要があります。
+
+## APM機能への影響 [#changes]
+
+ディストリビューティッド（分散）トレーシングにより、 APMの以前の[クロスアプリケーショントレース機能](/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces)が改善しています。主なメリットは次のとおりです：
+
+* より多くのクロスサービスアクティビティの詳細と完全なエンドツーエンドトレースを表示します。
+* クエリのトレースを絞り込み、カスタムチャートを作成します。
+* コールが組織のアカウントの境界を越えていても、完全なトレースを確認できます。
+* その他の機能については、[ディストリビューティッド（分散）トレーシングの機能](/docs/intro-distributed-tracing)を参照してください。
+
+[分散トレースを有効にすると、](/docs/understand-dependencies/distributed-tracing/get-started/introduction-distributed-tracing#enable) 一部の影響を受ける可能性があります <InlinePopover type="apm"/>現在使用している機能。これらの変更は、分散トレースが有効になっているエージェントによって監視されるアプリケーションにのみ影響し、アカウント レベルには適用されません。
+
+当社は、将来のリリースで影響を受ける機能の一部または全部に対して下位互換性を提供する可能性があります。それまでの間、ディストリビューティッド（分散）トレーシングを有効にする前に、以下の変更点について理解する必要があります。
 
 <CollapserGroup>
   <Collapser
-    id="external-details"
-    title="External services page has less detail"
-  >
-    When distributed tracing is enabled for an application, external calls do not have internal transaction details at **[one.newrelic.com](https://one.newrelic.com) > APM > (select an app) > Monitor > External services > (select external service)**.
-
-    To find that information, you would instead go to the **Distributed tracing** UI page, find the external call URLs, and see what their child spans are.
-  </Collapser>
-
-  <Collapser
     id="txn-trace-changes"
-    title="Transaction trace UI displays service URLs, not transaction links"
+    title="トランザクショントレースのUIには、トランザクションのリンクではなく、サービスのURLが表示されます。"
   >
-    When distributed tracing is enabled for an application, the transaction trace UI will no longer have the transaction name and link for the called service (see screenshot below). This will be replaced with the called service's URL.
+    アプリケーションでディストリビューティッド（分散）トレーシングを有効にすると、呼び出されたサービスのトランザクション名とリンクがトランザクショントレースのUIに表示されなくなります（下記のスクリーンショットを参照）。これは、呼び出されたサービスのURLで交換されます。
 
-    ![Distributed tracing - Transaction trace effects](./images/distributed-trace-txn-trace-affects.png "distributed-tracing-txn-trace-details-changes.png")
+    <img
+      title="distributed-tracing_screenshot-full_transaction-trace-UI.png"
+      alt="Distributed tracing - Transaction trace effects"
+      src={distributedtracingTransactionTraceUI}
+    />
+
+    <img
+      title="distributed-tracing_screenshot-crop_trace-name-change-UI.png"
+      alt="distributed-tracing_screenshot-crop_trace-name-change-UI.png"
+      src={distributedtracingTraceNameChangeUI}
+    />
 
     <figcaption>
-      **[one.newrelic.com](https://one.newrelic.com) > APM > (select an app) > Monitor > Transactions > (select a transaction trace)**: This shows the transaction trace UI before distributed tracing is enabled, with a link to the associated transaction. With distributed tracing enabled, it will display the service's URL.
+      **[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) > APM & services > (アプリを選択) > Monitor > Transactions > (トランザクション追跡を選択)**: これは、分散トレーシングが有効になる前のトランザクション追跡 UI と、関連付けられたトランザクションへのリンクを示します。分散トレースを有効にすると、サービスの URL が表示されます。
     </figcaption>
 
-    If you wanted to get more detail about trace activity, you would go to the **Distributed tracing** UI page and examine that trace.
+    トレースアクティビティのさらなる詳細については、**ディストリビューティッド（分散）トレーシング**のUIページに移動して、そのトレースを調査します。
   </Collapser>
 
   <Collapser
     id="cat-disabled"
-    title="Cross-application tracing will be disabled"
+    title="クロスアプリケーショントレーシングが無効になる"
   >
-    Enabling distributed tracing will disable the [cross application tracing](/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces) feature. Distributed tracing is an improved version of cross-application tracing and only one can be enabled at a time.
+    ディストリビューティッド（分散）トレーシングを有効にすると、[クロスアプリケーショントレーシング](/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces)機能が無効になります。ディストリビューティッド(分散)トレーシングは、クロスアプリケーショントレーシングの改良版であり、一度に有効にできるのは1つだけです。
   </Collapser>
 
   <Collapser
     id="maps-no-browser-mobile"
-    title="Impacts related to mobile monitoring"
+    title="Mobileモニタリングに関連する影響"
   >
-    APM-related impacts include:
+    APM関連の影響としては、次のものがあります。
 
-    * When distributed tracing is enabled for an APM-monitored entity, legacy [service maps](/docs/understand-dependencies/understand-system-dependencies/service-maps/introduction-service-maps) will not show applications monitored by mobile.
-    * The [App server drill-down](/docs/mobile-monitoring/mobile-monitoring-ui/network-pages/http-requests-page#details) feature of the legacy Mobile HTTP requests UI page is not available.
+    * APMによって監視されるエンティティ、レガシーに対してディストリビューティッド（分散）トレーシングが有効になっている場合、[サービスマップ](/docs/understand-dependencies/understand-system-dependencies/service-maps/introduction-service-maps)はモバイルによって監視されるアプリケーションを表示しません。
+    * レガシーモバイルHTTPリクエストのUIページの[アプリケーションサーバーのドリルダウン](/docs/mobile-monitoring/mobile-monitoring-ui/network-pages/http-requests-page#details)機能は使用できません。
   </Collapser>
 </CollapserGroup>
 
-## Plan your rollout [#rollout]
+## ディストリビューティッド（分散）トレーシングの有効化 [#enable]
 
-If you're enabling distributed tracing for a large, distributed system, here are some tips:
+分散トレーシングを使用するには、New Relic アカウントが必要です。まだお持ちでない場合は、以下で無料の New Relic アカウントを作成して、今すぐデータの監視を開始してください。
 
-* If you are a current APM user, see [Impact to APM features](/docs/apm/distributed-tracing/getting-started/transition-guide-distributed-tracing).
+<InlineSignup/>
 
-* Determine the requests that are the most important for your business, or the most likely to require analysis and troubleshooting, and [enable distributed tracing](#enable) for those services. Enable tracing for services at roughly the same time so you can more easily gauge how complete your end-to-end traces are.
-
-* When you look at traces in the [distributed tracing UI](/docs/apm/distributed-tracing/ui-data/understand-use-distributed-tracing-data), you'll see spans in the trace for external calls to other services. Then, you can [enable distributed tracing](#enable) for any of those services you want. If a service is fairly standalone and not often used in context with other services, you may not want to enable distributed tracing for it.
-
-  Here's a visual representation of such a phased roll-out:
-
-  ![Diagram showing a roll-out strategy for distributed tracing.](./images/roll_out.png "distributed-tracing-roll-out-strategy-image.png")
-
-* If you are using APM for a large, monolithic service, there may be many sub-process spans per trace and [APM limits](/docs/understand-use-distributed-tracing-data#rules-limits) may result in fewer traces than expected. You can solve this by using APM agent instrumentation to disable the reporting of unimportant data.
-
-* Distributed tracing works by [propagating header information](/docs/understand-dependencies/distributed-tracing/get-started/how-new-relic-distributed-tracing-works#headers) from service to service in a request path. Some services may communicate through a proxy or other intermediary service that does not automatically propagate the header. In that case, you will need to configure that proxy so that it allows the `newrelic` header value to be propagated from source to destination.
-
-## Enable distributed tracing [#enable]
-
-If you are aware of the impact to APM features and have thought about your rollout, you are ready to set up distributed tracing. See [Overview: Enable distributed tracing](/docs/understand-dependencies/distributed-tracing/enable-configure/overview-enable-distributed-tracing).
+への影響を認識している場合 <InlinePopover type="apm"/>機能を確認し、ロールアウトについて検討したら、分散トレーシングを設定する準備が整いました。 [設定オプションを](/docs/distributed-tracing/concepts/quick-start)参照してください。

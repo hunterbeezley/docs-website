@@ -1,171 +1,165 @@
 ---
-title: Browserモニタリングエージェントのインストール
+title: Browserエージェントのインストール
 tags:
   - Browser
   - Browser monitoring
   - Installation
 metaDescription: 'How to deploy browser monitoring in New Relic for your apps, including UI, copy/paste, and API options.'
+signupBanner:
+  text: Monitor and improve your entire stack. 100GB free. Forever.
+translationType: human
 ---
 
-Browserは、[JavaScript スニペット](/docs/browser/new-relic-browser/page-load-timing/instrumentation-page-load-timing)（または「エージェント」）を使用して、アプリのウェブページをインストゥルメントします。JavaScriptはブラウザ監視用のデータを収集します。Browserエージェントをインストールする場合は、さまざまなデプロイメントオプションから選択できます。
+import browserInstallStep1 from 'images/browser_screenshot-full_install-step-1.webp'
 
-<Callout variant="tip">
-  ブラウザとその他の[オブザーバビリティプラットフォーム](https://one.newrelic.com)を使用するには、New Relicファミリーに参加してください。[サインアップ](https://newrelic.com/signup)して、わずか数秒で無料アカウントを作成できます。次に、毎月最大100GBのデータを無料で取り込みます。期間無制限です。
-</Callout>
+import browserInstallStep2 from 'images/browser_screenshot-full_install-step-2.webp'
 
-## デプロイメントオプションの選択 [#options]
+import browserInstallStep3 from 'images/browser_screenshot-full_install-step-3.webp'
 
-ブラウザモニタリングのデプロイ時にどのオプションを使用しても、最終的にはBrowserエージェントのJavaScriptスニペットがブラウザモニタリング用ページに投入します。選択する方法は、個人の設定やビジネス上のニーズによって異なります。Browserエージェントをインストールし、有効にする手順を表示するには、使用するオプションのリンクをクリックします。また、[ブラウザ**アプリケーション設定**ページ](/docs/browser/new-relic-browser/configuration/browser-settings-ui-options-apdex-geography)を使用して、設定を更新することもできます。
+import browserInstallStep4 from 'images/browser_screenshot-full_install-step-4.webp'
 
-<Callout variant="important">
-  次の設定オプションは、ブラウザモニタリングエージェントのみを参照します。これらは、New Relicの[ユーザーロール](/docs/accounts/accounts-billing/new-relic-one-user-management/new-relic-one-user-model-understand-user-structure/#roles)や[エディション](https://newrelic.com/pricing)とは異なります。
-</Callout>
+import browserInstallStep5 from 'images/browser_screenshot-full_install-step-5.webp'
 
-<table>
-  <thead>
-    <tr>
-      <th width={200}>
-        **ブラウザのデプロイメントオプション**
-      </th>
+ブラウザ監視を開始するには、カスタマイズされたJavaScriptコードスニペットであるBrowserエージェントをウェブページHTMLに追加する必要があります。次に、Browserエージェントがアプリのパフォーマンスを監視し、そのデータをNew Relicに送信します。
 
-      <th>
-        **説明**
-      </th>
-    </tr>
-  </thead>
+以下の手順に従って、UIでブラウザアプリを作成し、Browserエージェントを設定して、エージェントでウェブページをインストゥルメントします。
 
-  <tbody>
-    <tr>
-      <td>
-        [APMエージェントを使用して](#select-apm-app)JavaScriptを投入
-      </td>
+## 開始する前に [#before-start]
 
-      <td>
-        APMエージェントを使用すると、ブラウザ監視用のJavaScriptスニペットを自動的に投入できます。これは、すでにAPMで監視されているアプリにエージェントをインストールする最も簡単な方法です。（APMの監視対象となっているアプリは、[APM**アプリケーション**インデックス](/docs/apm/applications-menu/monitoring/viewing-your-applications-list)に一覧表示されています。）
-      </td>
-    </tr>
+お使いのブラウザアプリが以下の互換性要件を満たしていることを確認してください。
 
-    <tr>
-      <td>
-        ウェブページに[JavaScriptスニペットをペースト](#copy-paste-app)
-      </td>
+* [SPA（シングルページアプリケーション）](/docs/browser/single-page-app-monitoring/get-started/spa-compatibility-requirements/)
+* [SPA以外](/docs/browser/new-relic-browser/getting-started/compatibility-requirements-browser-monitoring/)
 
-      <td>
-        BrowserエージェントのJavaScriptスニペットをコピーアンドペーストすることで、アプリのウェブページに挿入するJavaScriptの位置を正確に制御することができます。このオプションは、次のような場合に役立ちます。
+APIを使用して、プログラムによるアプリケーション監視をご希望ですか？[NerdGraphによるブラウザモニタリング](/docs/apis/nerdgraph/examples/browser-monitoring-config-nerdgraph)を参照してください。
 
-        * スタンドアロン型アプリ、静的サイト、CDNによって配信されるキャッシュページ
-        * 標準的なサーバーサイドアプリと同様に、ブラウザアプリに密接に連結されていないAPMアプリ（たとえば、クライアントサイドアプリがREST APIバックエンドと通信する場合）
-      </td>
-    </tr>
+<Steps>
+  <Step>
+    ### UIでのブラウザアプリの作成 [#create-browser-app-ui]
 
-    <tr>
-      <td>
-        [シングルページアプリ（SPA）監視の有効化](/docs/browser/single-page-app-monitoring/get-started/install-single-page-app-monitoring-new-relic-browser)
-      </td>
+    まず、**[one.newrelic.com](https://one.newrelic.com)**にアクセスして、UIでブラウザアプリを作成します。**Add data**をクリックし、**Data sources**で**Browser monitoring**を選択します。
 
-      <td>
-        SPAを有効化するには**Pro + SPA**Browserエージェントのサブスクリプションが必要で、BrowserのJavaScriptエージェントの再デプロイが必要になる場合があります。
-      </td>
-    </tr>
+    <img
+      title="Add your app"
+      alt="Add your browser app in the UI"
+      src={browserInstallStep1}
+      style={{ maxWidth: '70%' }}
+    />
+  </Step>
 
-    <tr>
-      <td>
-        [REST API](/docs/browser/new-relic-browser/browser-agent-apis/adding-or-listing-browser-apps-api-v2)を使用
-      </td>
+  <Step>
+    ### デプロイメント方法の選択 [#choose-deployment]
 
-      <td>
-        REST APIを使用すると、ブラウザUI以外でデプロイメントを管理できます。このオプションは、複数のアプリをディプロイする大規模組織で有効です。
-      </td>
-    </tr>
+    Browserエージェントをウェブページに追加するには、次の2つのデプロイメント方法があります。
 
-    <tr>
-      <td>
-        [APMエージェントAPI](#agent-instrumentation)を使用して、JavaScriptスニペットを手動でインストゥルメント
-      </td>
+    * 方法1：New Relic APMから有効にする（SPA以外のアプリに推奨）
 
-      <td>
-        APMで監視するアプリでは、APMエージェントのAPIを使用して、自動ではなく手動でJavaScriptを投入できます。
-      </td>
-    </tr>
-  </tbody>
-</table>
+      * <InlinePopover type="apm"/>
 
-## APM監視対象アプリの有効化 [#select-apm-app]
+        （アプリケーションパフォーマンス監視）エージェントを使用してブラウザアプリのバックエンド側を監視する場合は、このAPMオプションを使用する必要があります。APMエージェントは、ウェブサイトのすべてのページにBrowserエージェントを自動的にデプロイし、APMエージェントを再起動するたびに最新バージョンのBrowserエージェントを自動取得するため、SPA以外のアプリにはこのオプションが最適です。
 
-APMの監視対象になっているアプリにBrowserエージェントを自動的にデプロイする場合は、この手順を使用します。
+      または
 
-1. **[one.newrelic.com](https://one.newrelic.com)**に移動します。**ブラウザ**を選択してから、**データを追加**を選択します。
+    * 方法2：JavaScriptコードのコピー/ペースト（SPAアプリに推奨）
 
-2. **バックエンド、フロントエンドおよびモバイルアプリケション**セクションで、**New Relic Browser**タイトルを選択します。このインストゥルメントを追加するアカウントの選択を促すプロンプトが表示されたら、アカウントを選択し、**続行**をクリックします。
+      * SPAアプリを持っている、またはAPMエージェントが自動インジェクション（Node.js、Javaエージェント）に対応していないなどの理由で、最初のオプションを使用できない場合は、この方法を使用します。このオプションを選択すると、すべての設定が完了すると、UIの最終手順でカスタマイズしたJavaScriptスニペットをコピーし、アプリのHTMLに貼り付けます。
 
-3. **デプロイメントメソッドの選択**セクションの**New Relic Browserページで開始**から、**New Relic APMによる有効化**を選択します。
+    UIで、デプロイメント方法を選択し、次の手順に進みます。
 
-4. **インストゥルメンテーションの選択**セクションで、 **Lite**、**Pro**または**Pro + SPA**を選択します。
+    <img
+      title="choose a deployment method"
+      alt="choose a deployment method"
+      src={browserInstallStep2}
+      style={{ maxWidth: '70%' }}
+    />
+  </Step>
 
-5. **インストゥルメンテーションの設定**セクションで、必要な選択をします。
+  <Step>
+    ### （オプション）ディストリビューティッド（分散）トレーシングの有効化 [#enable-dist-tracing]
 
-6. **アプリケーションの選択**セクションに、入力または検索ウィンドウを使用してアプリ名を検索します。
+    次に、ディストリビューティッド（分散）トレーシングを有効にして、アプリのフロントエンドとバックエンドのアクティビティがどのように接続されているかを理解することができます。ディストリビューティッド（分散）トレーシングについて詳しくは、[こちら](/docs/browser/new-relic-browser/browser-pro-features/browser-data-distributed-tracing/)をご覧ください。
 
-7. **有効化**をクリックします。
+    <img
+      title="enable distributed tracing"
+      alt="enable distributed tracing"
+      src={browserInstallStep3}
+      style={{ maxWidth: '70%' }}
+    />
+  </Step>
 
-   <Callout variant="important">
-     **Node.js：**Note.jsアプリ用のBrowserエージェントの有効化を完了するには、HTMLページの[head](/docs/agents/nodejs-agent/supported-features/new-relic-browser-nodejs-agent)タグの先頭に`JavaScriptヘッダを挿入する`追加手順に従います。
-   </Callout>
+  <Step>
+    ### ブラウザアプリの名前付け [#name-browser-app]
 
-8. アプリでトラフィックを発生させます。
+    ブラウザアプリの名前を選択する際、次の2つのオプションがあります。
 
-9. **Browser**がデータ収集を開始するまで数分間待ってから、[Browserアプリケーションインデックス](/docs/browser/new-relic-browser/dashboard-details/browser-apps-list)からアプリを選択します。
+    * APMエージェントによってすでに監視されている既存のアプリを選択します。
+    * スタンドアロンブラウザアプリに新しい名前を付けます。
 
-## コピー/ペーストを有効化 [#copy-paste-app]
+    これらのオプションのいずれかを選択し、**有効化**をクリックします。
 
-この手順を使用して、Browserのブラウザモニタリング用JavaScriptスニペットを、アプリのウェブページに自分で挿入します。このオプションは、静的サイト（Jekyllなど）や、CDNで配信されたキャッシュページを監視する際に有効です。
+    <img
+      title="name or connect an existing browser app"
+      alt="name or connect an existing browser app"
+      src={browserInstallStep4}
+      style={{ maxWidth: '70%' }}
+    />
+  </Step>
 
-<Callout variant="tip">
-  生成されたJavaScriptの末尾付近に、BrowserのライセンスキーとアプリケーションIDがあります。これは、[REST API](/docs/apis/rest-api-v2/browser-examples-v2)や[APIエクスプローラー](/docs/apis/rest-api-v2/api-explorer-v2/getting-started-new-relics-api-explorer)を使用する際に有効です。
-</Callout>
+  <Step>
+    ### （コピー/ペースト方法のみ）JavaScriptスニペットをインジェクトします。 [#inject-js-snippet]
 
-1. **[one.newrelic.com](https://one.newrelic.com)**に移動します。**ブラウザ**を選択してから、**データを追加**を選択します。
+    コピー/ペーストオプションを選択した場合は、JavaScriptスニペットをブラウザアプリのHTMLに追加します。
 
-2. **バックエンド、フロントエンドおよびモバイルアプリケション**セクションで、**New Relic Browser**タイトルを選択します。このインストゥルメントを追加するアカウントの選択を促すプロンプトが表示されたら、アカウントを選択し、**続行**をクリックします。
+    UIで、アプリインストゥルメンテーション用にカスタマイズされたJavaScriptスニペットをコピーし、ウェブアプリの`<head>`タグに貼り付けます。
 
-3. **デプロイメントメソッドの選択**セクションの**New Relic Browserページで開始**から、**JavaScriptコードのコピー/ペースト**を選択します。
+    <Callout variant="tip">
+      通常、headタグはアプリのすべてのページに読み込まれるサードパーティのスクリプト、フォントなどを扱うので、1つの場所に貼り付けるだけで済みます。これを`<head>`のできるだけ先頭近く、ただし位置に依存するMETAタグ（X-UA-Compatibleやcharsetなど）の後に貼り付けるようにしてください。スニペットの配置に関する詳細については、[JavaScriptの配置要件](/docs/browser/new-relic-browser/page-load-timing-resources/instrumentation-browser-monitoring#javascript-placement)を参照してください。
+    </Callout>
 
-4. **インストゥルメンテーションの選択**セクションで、エージェントのタイプ: **Lite**、**Pro**または**Pro + SPA**を選択します。
+    <img
+      title="copy and paste the js snippet"
+      alt="copy and paste the js snippet from the UI"
+      src={browserInstallStep5}
+      style={{ maxWidth: '70%' }}
+    />
 
-5. **インストゥルメンテーションの設定**セクションで、必要な選択をします。
+    <figcaption>
+      JavaScriptスニペットには、機密データ（アカウントID、ライセンスキーなど）が含まれているため、このスクリーンショットをぼかしています。UIから独自のJavaScriptスニペットをコピーして貼り付ける必要があります。
+    </figcaption>
 
-6. **アプリに命名**セクションで、アプリに命名します。
+    <Callout variant="tip">
+      APMエージェントのAPIを使用してJavaScriptスニペットを追加する必要がありますか？ 以下のエージェント固有の手順を確認してください。
 
-   * アプリがAPMの監視対象となっている場合は、**はい**を選択して、アプリ名を入力、または検索ウィンドウを使用してアプリ名を検索します。
-   * **ブラウザ**（APMの監視対象ではない）のスタンドアロン型アプリの場合は、**いいえ**を選択してから、アプリ名を入力します。
+      * [Go](/docs/agents/go-agent/features/install-new-relic-browser-go-apps)
+      * [Java](/docs/agents/java-agent/instrumentation/page-load-timing-java)
+      * [.NET](/docs/agents/net-agent/features/page-load-timing-net)
+      * [Node.js](/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs)
+      * [PHP](/docs/agents/php-agent/features/page-load-timing-php)
+      * [Python](/docs/agents/python-agent/supported-features/page-load-timing-python)
+      * [Ruby](/docs/agents/ruby-agent/features/page-load-timing-ruby)
+    </Callout>
+  </Step>
 
-7. **有効化**をクリックします。
+  <Step>
+    ### アプリへのトラフィックの生成 [#generate-traffic]
 
-8. 新しいセクション、**エージェントのインストゥルメント**が、プロジェクトのJavaScriptコードがあるページで開きます。コードスニペットをコピーし、ページ内のできるだけ`<head>`要素の最上部付近、ただし位置に敏感な`<meta>`タグ（例、`X-UA-Compatible`または`charset`情報）の後に埋め込む形でペーストします。インラインの`ヘッド`配置に関する詳細については、[JavaScriptの配置要件](https://docs.newrelic.com/docs/browser/new-relic-browser/page-load-timing-resources/instrumentation-browser-monitoring#javascript-placement)を参照してください。
+    Browserエージェントのインストールが完了しました！次に、アプリのトラフィックを生成し、New Relicにデータが表示されるまで数分間待つ必要があります。
 
-9. アプリでトラフィックを発生させます。
+    <Callout variant="tip">
+      データが表示されませんか？
 
-10. **ブラウザ**がデータ収集を開始するまで数分間待ってから、[Browserアプリケーションインデックス](/docs/browser/new-relic-browser/getting-started/browser-apps-index/)からアプリを選択します。
+      ブラウザのモニタリングエージェントを有効にした後、ウェブページデータがNew Relicに表示されるまでに数分かかる場合があります。それでもデータが表示されない場合は、[ブラウザモニタリングのトラブルシューティング](/docs/browser/browser-monitoring/troubleshooting/troubleshoot-your-browser-monitoring-installation/)を確認してください。
+    </Callout>
+  </Step>
+</Steps>
 
-コピー/ペーストを使用する場合は、セットアッププロセスを完了しないでください。引き続き、アプリの[Browser**アプリケーション設定**ページ](/docs/browser/new-relic-browser/configuration/browser-settings-ui-options-apdex-geography)から、または [REST API（v2）](/docs/browser/new-relic-browser/browser-agent-apis/adding-or-listing-browser-apps-api-v2)を使用して、生成されたJavaScriptスニペットを表示およびコピーできます。
+## 次のステップ [#whats-next]
 
-## APMエージェントを使用してウェブページをインストゥルメント [#agent-instrumentation]
+次の手順の概要：
 
-この情報は、APMの監視対象となっているアプリにも適用されます。
+* [概要ページ](/docs/browser/browser-monitoring/getting-started/browser-summary-page/)でアプリのデータを表示します。
+* Browserエージェントのインストゥルメントが完了したので、[ウェブサイトの改善チュートリアル](/docs/journey-performance/guide-to-monitoring-core-web-vitals)でデータを詳しく見てみましょう。
+* [ブラウザモニタリングのベストプラクティスガイド](/docs/new-relic-solutions/best-practices-guides/full-stack-observability/browser-monitoring-best-practices-guide/)で、ブラウザモニタリング体験を最適化する方法を説明します。
+* [BrowserエージェントタイプをブラウザLiteからProまたはPro+SPAに変更](/docs/browser/new-relic-browser/configuration/change-browser-agent-type)します。
 
-New Relicのエージェントは、ページロードタイミングで必要なJavaScriptで、ウェブページをインストゥルメントできます。APMエージェントを使用してJavaScriptスニペットをウェブページに追加する場合は、できるだけ最上部に近い位置にインストゥルメンテーションスニペットを挿入します。これで、ブラウザの[AJAX呼び出し](/docs/browser/new-relic-browser/dashboard-details/ajax-dashboard)や[JavaScriptエラー](/docs/browser/new-relic-browser/dashboard-details/javascript-errors-dashboard)に関する詳細な情報を利用できます。
-
-詳細については、APMエージェントの手順を参照してください。
-
-* [C SDK](/docs/agents/c-sdk/instrumentation/guide-using-c-sdk-api/#browser)
-* [Go](/docs/agents/go-agent/features/install-new-relic-browser-go-apps)
-* [Java](/docs/agents/java-agent/instrumentation/page-load-timing-java)
-* [.NET](/docs/agents/net-agent/features/page-load-timing-net)
-* [Node.js](/docs/agents/nodejs-agent/supported-features/page-load-timing-nodejs)
-* [PHP](/docs/agents/php-agent/features/page-load-timing-php)
-* [Python](/docs/agents/python-agent/supported-features/page-load-timing-python)
-* [Ruby](/docs/agents/ruby-agent/features/page-load-timing-ruby)
-
-## Browserエージェントのインストレーションのトラブルシューティング [#troubleshooting]
-
-[セッショントレース](/docs/browser/new-relic-browser/dashboard-details/session-traces-exploring-webpages-life-cycle)、[AJAX呼び出し](/docs/browser/new-relic-browser/dashboard-details/ajax-dashboard)、または[JavaScript](/docs/browser/new-relic-browser/dashboard-details/javascript-errors-dashboard)エラーのBrowser Pro機能を有効化する場合は、情報を使用できるようになるまでに5分程度かかる場合があります。ブラウザのインストレーションに問題がある場合、または5分経過してもデータが表示されない場合は、[トラブルシューティングのヒント](/docs/browser/new-relic-browser/getting-started/troubleshooting-browser-monitoring)を参照し、エージェントを再起動します。
+<InstallFeedback/>

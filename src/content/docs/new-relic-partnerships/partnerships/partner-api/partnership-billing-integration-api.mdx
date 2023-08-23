@@ -18,7 +18,9 @@ For example, when customers of a New Relic reseller partner purchase a higher su
 
 ## Requirements [#requirements]
 
-**Before using this object, please read the [Partnership API requirements](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api/).**
+**The Partnership API is not available to your organization unless you're specifically instructed by your New Relic representative that you should use it.**
+
+Before using this object, read the [Partnership API requirements](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api/).
 
 ## Communication endpoint [#billing-communication]
 
@@ -42,7 +44,7 @@ Supported functionality for the Partnership billing API includes:
     To communicate changes to a partner about a customer's subscription, New Relic uses the POST method with this [URI](#billing-communication):
 
     ```
-    https://<var>partner-specified</var>/<var>partner-specified</var>/<var>PARTNER_ID</var>.json
+    https://partner-specified/partner-specified/PARTNER_ID.json
     ```
 
     Authentication is done via headers with the partner's REST API key or [Admin user's API key](/docs/apis/rest-api-v2/requirements/admins-api-key-partnerships). The Partnership API returns the results as JSON.
@@ -182,13 +184,13 @@ Supported functionality for the Partnership billing API includes:
     New Relic uses this endpoint to notify the partner of changes to a partner account's subscription level and invoice information. New Relic uses the PUT method with this [URI](#billing-communication):
 
     ```
-    https://<var>partner-specified</var>/<var>partner-specified</var>/<var>PARTNER_ID</var>.json
+    https://partner-specified/partner-specified/PARTNER_ID.json
     ```
 
     OR
 
     ```
-    https://<var>partner-specified</var>/<var>partner-specified</var>/<var>PARTNER_ID</var>.xml
+    https://partner-specified/partner-specified/PARTNER_ID.xml
     ```
 
     The Partnership API returns the results as JSON or XML.

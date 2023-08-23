@@ -3,16 +3,16 @@ addReviewers: true
 
 # A list of reviewers to be added to pull requests (GitHub user name)
 reviewers:
-  - bradleycamacho
-  - barbnewrelic
   - paperclypse
-  - zuluecho9
   - rhetoric101
-  - urbiz-nr
-  - x8a
-  - mmfred 
-  - stumblefiend
-  - dbarnesbrownNR 
+  - homelessbirds
+  - nbaenam
+  - a-sassman
+  - zuluecho9
+  - ally-sassman
+  - akristen
+  - jeff-colucci
+  - bradleycamacho
 
 # A number of reviewers added to the pull request
 # Set 0 to add all the reviewers (default: 0)
@@ -22,3 +22,4 @@ filterLabels:
   # Run
   include:
     - from_tw
+ 

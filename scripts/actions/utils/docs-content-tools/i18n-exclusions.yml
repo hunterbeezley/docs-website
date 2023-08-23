@@ -1,0 +1,32 @@
+excludePath:
+  ja-JP:
+    - src/announcements
+    - src/content/whats-new
+    - src/content/docs/release-notes
+    - src/content/docs/licenses
+    - src/content/docs/style-guide
+    - src/content/docs/agile-handbook
+    - src/data-dictionary
+    - src/i18n
+    - src/content/docs/security/security-privacy/data-privacy
+    - src/content/docs/security/security-privacy/compliance
+    - scripts/actions/__tests__/kitchen-sink.mdx
+    - src/install
+    - src/content/docs/mdx-test-page
+  ko-KR:
+    - src/announcements
+    - src/content/whats-new
+    - src/content/docs/release-notes
+    - src/content/docs/licenses
+    - src/content/docs/style-guide
+    - src/content/docs/agile-handbook
+    - src/data-dictionary
+    - src/i18n
+    - src/content/docs/security/security-privacy/data-privacy
+    - src/content/docs/security/security-privacy/compliance
+    - scripts/actions/__tests__/kitchen-sink.mdx
+    - src/install
+    - src/content/docs/mdx-test-page
+excludeType:
+  ja-JP:
+  ko-KR:

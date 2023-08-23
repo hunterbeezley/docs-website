@@ -11,11 +11,13 @@ redirects:
   - /docs/accounts-partnerships/partnerships/partner-api/partnership-api-user-object
 ---
 
-This doc explains how to use the [Partnership API](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api/) to add and manage users. 
+This doc explains how to use the [Partnership API](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api/) to add and manage users.
 
 ## Requirements [#requirements]
 
-You can use the user object only if your organization has users on our original user model. **Before using the API, read the [Partnership API requirements](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api/).**
+**The Partnership API is not available to your organization unless you're specifically instructed by your New Relic representative that you should use it.**
+
+You can use the user object only if your organization has users on our original user model. Before using the API, read the [Partnership API requirements](/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api/).
 
 ## User object attributes [#user-attributes]
 
@@ -240,8 +242,8 @@ This is the list of attributes in the user object. Ensure you assign the [**owne
 Here are the URL patterns for user-related API functions. If using this URL pattern, send an HTTP header containing the [Partner API key](/docs/new-relic-partnerships/partnerships/partner-api/partner-api-reference#the-api-key) along with the JSON request body. For example:
 
 ```
-GET .../api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>ID</var>
-x-api-key:<var>PARTNER_ACCOUNT_KEY</var>
+GET .../api/v2/partners/PARTNER_ID/accounts/ID
+x-api-key:PARTNER_ACCOUNT_KEY
 Content-Type: application/json
 
 { JSON data }
@@ -268,7 +270,7 @@ Content-Type: application/json
 
       <td>
         ```
-        GET /api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>ACCOUNT_ID</var>/users
+        GET /api/v2/partners/PARTNER_ID/accounts/ACCOUNT_ID/users
         ```
       </td>
     </tr>
@@ -280,7 +282,7 @@ Content-Type: application/json
 
       <td>
         ```
-        PUT /api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>ACCOUNT_ID</var>/users/<var>ID</var>
+        PUT /api/v2/partners/PARTNER_ID/accounts/ACCOUNT_ID/users/ID
         ```
       </td>
     </tr>
@@ -294,7 +296,7 @@ Content-Type: application/json
 
       <td>
         ```
-        POST /api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>ACCOUNT_ID</var>/users
+        POST /api/v2/partners/PARTNER_ID/accounts/ACCOUNT_ID/users
         ```
       </td>
     </tr>
@@ -308,7 +310,7 @@ Content-Type: application/json
 
       <td>
         ```
-        DELETE /api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>ACCOUNT_ID</var>/users/<var>ID</var>
+        DELETE /api/v2/partners/PARTNER_ID/accounts/ACCOUNT_ID/users/ID
         ```
       </td>
     </tr>
@@ -388,9 +390,9 @@ Here are examples of API calls using the Partnership API user object.
 
     ```
     curl -X GET \
-        -H 'x-api-key:<var>PARTNER_ACCOUNT_KEY</var>' \
+        -H 'x-api-key:PARTNER_ACCOUNT_KEY' \
         -H 'Content-Type:application/json' \
-        https://rpm.newrelic.com/api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>12345</var>/users
+        https://rpm.newrelic.com/api/v2/partners/PARTNER_ID/accounts/12345/users
     ```
 
     Response:
@@ -416,10 +418,10 @@ Here are examples of API calls using the Partnership API user object.
 
     ```
     curl -X POST \
-        -H 'x-api-key:<var>PARTNER_ACCOUNT_KEY</var>' \
+        -H 'x-api-key:PARTNER_ACCOUNT_KEY' \
         -H 'Content-Type:application/json' \
         -d '{"users":[{"email": "foobar@newrelic.com", "password":"password1", "first_name":"John", "last_name":"Doe", "role":"admin" }]}' \
-        https://rpm.newrelic.com/api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>12345</var>/users
+        https://rpm.newrelic.com/api/v2/partners/PARTNER_ID/accounts/12345/users
     ```
 
     Response (line breaks are for readability):
@@ -438,10 +440,10 @@ Here are examples of API calls using the Partnership API user object.
 
     ```
     curl -X PUT \
-        -H 'x-api-key:<var>PARTNER_ACCOUNT_KEY</var>' \
+        -H 'x-api-key:PARTNER_ACCOUNT_KEY' \
         -H 'Content-Type:application/json' \
         -d '{"users":[{"role": "restricted"}]}' \
-        https://rpm.newrelic.com/api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>12345</var>/users/<var>23456</var>
+        https://rpm.newrelic.com/api/v2/partners/PARTNER_ID/accounts/12345/users/23456
     ```
 
     Response (line breaks are for readability)
@@ -460,12 +462,11 @@ Here are examples of API calls using the Partnership API user object.
 
     ```
     curl -X DELETE \
-        -H 'x-api-key:<var>PARTNER_ACCOUNT_KEY</var>' \
+        -H 'x-api-key:PARTNER_ACCOUNT_KEY' \
         -H 'Content-Type:application/json' \
-        https://rpm.newrelic.com/api/v2/partners/<var>PARTNER_ID</var>/accounts/<var>12345</var>/users/<var>23456</var>
+        https://rpm.newrelic.com/api/v2/partners/PARTNER_ID/accounts/12345/users/23456
     ```
 
     Response: No response body.
   </Collapser>
 </CollapserGroup>
-
